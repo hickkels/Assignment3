@@ -1,10 +1,11 @@
 int main(int argc, char *argv[]) {
 
     // parse makefile with text parser
-	// text parser will call buildrep to create each struct
+	// text parser will return an array of target structs
 
-    // get array of structures
+    // iterate through array of structures
+    // check for cycles in each structure
 
-    // target lines will begin 
+    // run commands  ?? not about this part
 
 }
