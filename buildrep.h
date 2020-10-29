@@ -15,7 +15,7 @@ typedef struct Target
     int visited;
 } Target;
 
-Target create(char** target_strings);
+Target create(char** dependencies, char** commands, int num_commands);
 void update(); // from writeup, don't do anything yet
 void access(); // from writeup, don't do anything yet
 
