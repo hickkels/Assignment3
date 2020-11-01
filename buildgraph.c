@@ -9,9 +9,9 @@
 * 
 * ERROR IF THERE IS A CYCLE
 */
-void buildGraph() {
+void buildGraph(Target *target_list) {
 
-
+    
 
 }
 
@@ -21,16 +21,27 @@ void buildGraph() {
 *
 * -going to call on each target
 * -call recursively on each node in array of dependencies
-* 
+* -return true if dependency, otherwise false
 */
-void traverseGraph() {
+bool traverseGraph(Target *t) {
 
     // BASE CASE: node has no dependencies
-	// set visited to 0
+    if (t->dependencies==NULL) {
+	t->visited=0;
+	return false;
+    }
 
     // RECURSIVE CASE: call traverse on each of a nodes dependencies
+    for (int i=0; i<t->num_dependencies; i++) {
+        // visit current node (root)
+	Target *curr = 
+            // set visited to 1
+    }
 
-    // visit current node (root)
-	// set visited to 1
+}
+
+Target *getTarget(char *name) {
+
+    // iterate through each target checking for the name
 
 }
