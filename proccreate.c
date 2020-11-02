@@ -3,6 +3,7 @@
 * gets the return code
 */
 
+#include "proccreate.h"
 #include <sys/types.h>
 #include <stat.h>
 #include <unistd.h>

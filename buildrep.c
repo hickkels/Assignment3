@@ -83,7 +83,8 @@ Target create(char* dependencies, char** commands, int num_commands) {
 
     // set visited to false (0)
     t->visited = 0;
-    // SHOULD WE INIT? t->modTime 
+    // set initial mod time to zero
+    t->modTime = 0; 
 
     return t;
 }
