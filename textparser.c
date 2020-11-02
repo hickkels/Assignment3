@@ -17,7 +17,6 @@ static int MAX_LINE = 4096;
 /* for testing purposes */
 int main(void)
 {
-    char ** output;
     int k = 0;
     while (k <= 5) {
         parse_makefile();
@@ -34,7 +33,8 @@ int main(void)
 void parse_makefile() {
     /* makefile line variables */
     char *line = NULL; // line being read from makefile
-    char *longLine; // used to print a line greater than a buffer
+    char *longLine = NULL; // used to print a line greater than a buffer
+    char tab_chars[] = ">...";
     FILE *makefile; // initialize makefile
     ssize_t read; // number of characters in line read
     size_t len = 0; // initial size of string
@@ -42,7 +42,7 @@ void parse_makefile() {
     /* character compare variables */
     char firstCh; // character to be iterated and read in from stdin
     char *string_without_tab; // command line string without the tab
-    char *tab; // characters of tab string
+    char tab[4]; // characters of tab string
     char **c;
     char **d;
         
@@ -135,7 +135,6 @@ void parse_makefile() {
             num_commands++;
             char *command = malloc(sizeof(char) * read);
             c = malloc(sizeof(char) * read);
-            tab = malloc(sizeof(char) *4);
             string_without_tab = malloc(sizeof(char) * read);
             
             /* get the first 4 characters of the line */
@@ -144,7 +143,7 @@ void parse_makefile() {
             }
 
             /* if tab isn't equal to the correct tab characters */
-            if (tab == ">...") {    
+            if (strcmp(tab, tab_chars) == 0) {    
                 // error
                 printf(stderr, "%d%s%s\n", linenum, ": Invalid line format: ", string);
                 exit(1);
