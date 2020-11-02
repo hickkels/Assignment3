@@ -30,7 +30,7 @@ int main(void)
 * filters out blank line
 * passes dependency and command arrays to build rep module
 */
-void parse_makefile() {
+Target *parse_makefile() {
     /* makefile line variables */
     char *line = NULL; // line being read from makefile
     char *longLine = NULL; // used to print a line greater than a buffer
@@ -50,6 +50,17 @@ void parse_makefile() {
     int count, count2, i; // iterators 
     int linenum = 0; // makefile line number
     int num_commands = 0; // number of command lines
+
+    int numTargets = 0;
+    Target *targetArray = malloc(1000 * sizeof(Target)); // FIGURE OUT SIZE
+
+    for (int i=0; i<1000; i++) {
+	targetArray[i] = malloc(sizeof(Target));
+	if (targetArray[i]==NULL) {
+	    fprintf(stderr,"Error while allocating target array\n");
+	    exit(1);
+	}
+    }
         
     // open makefile
     makefile = fopen("/u/c/e/cecelia/Assigment3/makefile", "r");
@@ -175,7 +186,14 @@ void parse_makefile() {
         
         if (firstCh == '\n') {
             // pass array of dependencies and array of commands to build rep.
-            create(d, c, num_commands);
+            Target *t = create(d, c, num_commands);
+	    targetArray[numTargets] = malloc(sizeof(struct Target));
+	    if (NULL==targetArray[numTargets]) {
+		fprintf(stderr,"Error while allocating target in array\n");
+		exit(1);
+	    }
+	    targetArray[numTargets] = t;
+	    numTargets++;
             
             // reset number of command lines
             num_commands = 0;
