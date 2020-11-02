@@ -2,6 +2,7 @@
 * traverses the graph in bottom-up order
 */
 
+#include "buildgraph.h"
 #include "buildrep.h"
 #include<stdio.h>
 
