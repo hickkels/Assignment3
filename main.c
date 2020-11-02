@@ -1,12 +1,15 @@
 int main(int argc, char *argv[]) {
 
-    // parse makefile with text parser
-	// text parser will return an array of target structs
+    // check for lowercase then uppercase makefiles
+	// print error if not found and exit
 
-    // iterate through array of structures
-    // check for cycles in each structure
+    // call text parser on file
+	// text parser will return an array of targets
 
-    // run commands  ?? not about this part
+    // iterate through array of target structures
+        // check for cycles in each structure
+
+    // run process creation to run commands
 
     
 }

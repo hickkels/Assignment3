@@ -13,6 +13,7 @@ typedef struct Target
     char **command_lines;
     int num_command_lines;
     int visited;
+    time_t modTime;
 } Target;
 
 Target create(char** dependencies, char** commands, int num_commands);

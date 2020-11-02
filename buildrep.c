@@ -3,6 +3,7 @@
 */
 
 #include "buildrep.h"
+#include <stdio.h>
 
 /*
 * Create a target structure from the parsed array of input strings
@@ -22,9 +23,8 @@ Target create(char* dependencies, char** commands, int num_commands) {
         exit(1);
     }
 
-    // get target
     // count how many dependencies there are
-    char *first_line = target_strings[0];
+    char *first_line = dependencies;
     int first_line_len = sizeof(first_line);
 
     char *target_name = "";   
@@ -44,7 +44,12 @@ Target create(char* dependencies, char** commands, int num_commands) {
 	}
     }
 
-    // TODO: copy the first target_name_len chars into t->name
+    // copy the first target_name_len chars into t->name
+    char targetName[target_name_len+1] = {0};
+    strncpy(targetName, dependencies, target_name_len);
+    targetName[target_name_len] = '\0'; // null terminator
+    t->name = targetName;    
+
     t->num_dependencies = dep_count;
 
     // make array of char pointers for each dependency
@@ -53,8 +58,8 @@ Target create(char* dependencies, char** commands, int num_commands) {
         fprintf(stderr,"Error while allocating dependency 2D char array\n");
         exit(1);
     }
-    // TODO: copy all num_dependencies dependencies into dep array
 
+    // copy all num_dependencies dependencies into dep array
     char *first_line_ptr = strtok(first_line, " ");
 
     int i=0;
@@ -78,6 +83,7 @@ Target create(char* dependencies, char** commands, int num_commands) {
 
     // set visited to false (0)
     t->visited = 0;
+    // SHOULD WE INIT? t->modTime 
 
     return t;
 }

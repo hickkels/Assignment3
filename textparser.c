@@ -52,7 +52,7 @@ void parse_makefile() {
     int num_commands = 0; // number of command lines
         
     // open makefile
-    makefile = fopen("/u/h/i/hickok/private/OS/Assignment3/makefile", "r");
+    makefile = fopen("/u/c/e/cecelia/Assigment3/makefile", "r");
     
     // check if makefile is a valid file
     if (makefile == NULL) {
