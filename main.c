@@ -8,31 +8,36 @@
 int main(int argc, char *argv[]) {
 
     FILE *fp; // call text parser on file
-    Target *target_array; // text parser will return an array of targets
+    struct Target *target_list[100]; // text parser will return an array of targets
+    for (int i=0; i<100; i++) {
+	target_list[i] = (struct Target*) malloc(sizeof(struct Target));
+        if (NULL==target_list[i]) {
+            fprintf(stderr,"Error while allocating target in array\n");
+            exit(1);
+        }
+    }
+    int num_targets = 0;
 
     // check for lowercase then uppercase makefiles
-    // print error if not found and exit
     if (((fp = fopen("makefile", "r")) != NULL)) {
-        target_array = parse_makefile(fp);
+        parse_makefile(fp, &num_targets, &target_list);
     } else if ((fp = fopen("Makefile", "r") != NULL)) {
-        target_array = parse_makefile(fp);
+        parse_makefile(fp, &num_targets, &target_list);
     } else {
+	// print error if not found and exit
         fprintf(stderr, "Cannot open makefile, invalid file.");
         exit(1);
     }
 
     // iterate through array of target structures
+    for (int i = 0; i<num_targets; i++) {
         // check for cycles in each structure
-    for (int i = 0; i < t->num_dependencies; i++) {
-        traverseGraph(target_array[i]);
+	traverseGraph(target_list[i]);
     }
 
-    // TODO: find length of var
     // run process creation to run commands
-    for (int i = 0; i < var; i++) {
-        run_command(target_array[i]);    
+    for (int i = 0; i < num_targets; i++) {
+        run_command(target_list[i]);    
     }
 }
-
-
 

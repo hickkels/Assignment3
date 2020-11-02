@@ -78,3 +78,9 @@ Target *getTarget(char *name) {
     
 
 }
+
+Target *findTarget(char *name, Target *target_list) {
+
+    
+
+}
