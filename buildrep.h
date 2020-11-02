@@ -4,6 +4,7 @@ Kelsey Hickok: khickok@wisc.edu, 9076435016
 */
 #ifndef BUILD_REP_H_
 #define BUILD_REP_H_
+#include<time.h>
 
 typedef struct Target
 {

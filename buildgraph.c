@@ -4,7 +4,7 @@
 
 #include "buildgraph.h"
 #include "buildrep.h"
-#include<stdio.h>
+#include <stdio.h>
 
 /*
 * build the graph that represents dependencies between build specifications
