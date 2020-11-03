@@ -19,6 +19,8 @@ int main(int argc, char *argv[]) {
 
     int num_targets = 0;
 
+    printf("made it here\n");
+
     // check for lowercase then uppercase makefiles
     if (((fp = fopen("/u/h/i/hickok/private/OS/Assignment3/tests/missing_tab/makefile", "r")) != NULL)) {
         parse_makefile(fp, &num_targets, target_list);
