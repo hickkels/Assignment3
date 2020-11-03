@@ -19,6 +19,5 @@ typedef struct Target
 
 Target *create(char* dependencies, char** commands, int num_commands);
 void update(); // from writeup, don't do anything yet
-void access(); // from writeup, don't do anything yet
 
 #endif // BUILD_REP_H
