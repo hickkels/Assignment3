@@ -17,7 +17,7 @@ typedef struct Target
     time_t modTime;
 } Target;
 
-Target *create(char* dependencies, char** commands, int num_commands);
+Target *create(char *name, char** dependencies, int counter, char** commands, int num_commands);
 void update(); // from writeup, don't do anything yet
 
 #endif // BUILD_REP_H

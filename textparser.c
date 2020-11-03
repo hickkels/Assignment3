@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <stdbool.h>
 #include <string.h>
 #include <sys/stat.h>   // stat
 #include "textparser.h"
@@ -23,37 +24,29 @@ static int MAX_LINE = 4096;
 void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
     /* makefile line variables */
     char *line = NULL; // line being read from makefile
-    char *longLine = NULL; // used to print a line greater than a buffer
     char tab_chars[] = ">...";
     ssize_t read; // number of characters in line read
-    size_t len = 0; // initial size of string
-    
+    size_t len = 0; // initial size of string    
+
     /* character compare variables */
     char firstCh; // character to be iterated and read in from stdin
     char *string_without_tab; // command line string without the tab
     char tab[4]; // characters of tab string
     char **c;
     char **d;
+    bool colon = false;
         
     /* counter variables */
     int count, count2, i; // iterators 
     int linenum = 0; // makefile line number
     int num_commands = 0; // number of command lines
-
+    char *name;
     int numTargets = 0;
         
-    // open makefile
-    makefile = fopen("/u/c/e/cecelia/Assigment3/makefile", "r");
-    
-    // check if makefile is a valid file
-    if (makefile == NULL) {
-        fprintf(stderr, "Cannot open makefile, invalid file.");
-        exit(1);
-    }
-
     /* get lines in makefile */
     while ((read = getline(&line, &len, makefile)) != -1) {
         firstCh = line[0]; // get the first character of the line
+        char *longLine = malloc(sizeof(char) * MAX_LINE);
         char *string = line; // set new string to the line contents
         linenum++; // increase line number
         
@@ -67,7 +60,7 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
             /* get characters up until MAX_LINE */
             i = 0;
             while (i < MAX_LINE) {
-               longLine[i] = line[i];
+               longLine[i] = string[i];
                i++;
             }
             printf("%s\n", longLine); // print line
@@ -85,26 +78,37 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
         /* if comment or empty line */ 
         if ((firstCh == '#') || (firstCh == '\n') ) {
             // ignore rest of line
+            
             continue;
-        } else if ((firstCh != '>') && ((isalpha(firstCh)) || isdigit(firstCh))) {
+        } else if (((firstCh != '>') && ((isalpha(firstCh))) || isdigit(firstCh))) {
             /* dependency declarations */
             count = 0;
             char* depend = malloc(sizeof(char) * read);
             d = malloc(sizeof(char) * read);
-    
-            // find target name
-            depend = strtok(string,":");
+            
+            for (int a = 0; a < read; a++) {
+                if(string[a] == ':')
+                    colon = true;
+            }
+            
+            if (colon == false) {
+                fprintf(stderr, "%d%s%s\n", linenum, ": Invalid line format : ", string);
+                exit(1);
+            } else {
+                // find target name
+                name = strtok(string,":");
+            }
             
             /* if there is no target name */
-            if (depend == NULL) {
+            if (name == NULL) {
                 // error
-                fprintf(stderr, "%d%s%s\n", linenum,": No target name, invalid line: ", string);
-                exit(1);
+                fprintf(stderr, "%d%s%s\n", linenum,": No valid target name : ", string);
             }
 
+            strcpy(depend, name);
+            
             /* if target is valid */
             while(depend != NULL) {
-                printf("%s%s\n", "Dependency: ", depend);
                 // get next string in the line
                 depend = strtok(NULL, " ");
 
@@ -117,7 +121,7 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
                 */
                 
                 // add dependency to array
-                d[count] = depend;
+                if (count!=0) d[count-1] = depend;
                 count++;
             }
         } else if (firstCh == '>') {
@@ -152,23 +156,23 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
             
             /* while first command is valid */
             while(command != NULL) {
-                printf("%s%s\n", "Command: ", command);
                 // get the next command of the line
                 command = strtok(NULL, " ");
                 c[count2] = command;
                 count2++;
-            }
+            }  
+
         } else {
             // if line doesn't start with a target name or tab 
             fprintf(stderr, "%d%s%s\n", linenum, ": Invalid line format: ", string);
             exit(1);
         }
-        
+
         if (firstCh == '\n') {
             // pass array of dependencies and array of commands to build rep.
-            Target *t = create(d, c, num_commands);
-	    target_list[numTargets] = t;
-	    numTargets++;
+            Target *t = create(name, d, count-1, c, num_commands);
+    	    target_list[numTargets] = t;
+	        numTargets++;
             *num_targets= numTargets;
 	     
             // reset number of command lines

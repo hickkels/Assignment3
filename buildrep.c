@@ -15,7 +15,7 @@
 * ..
 * commandm ..
 */
-Target *create(char* dependencies, char** commands, int num_commands) {
+Target *create(char *name, char** dependencies, int num_depends, char** commands, int num_commands) {
 
     // malloc target struct
     Target *t;

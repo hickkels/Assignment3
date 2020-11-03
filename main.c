@@ -18,17 +18,17 @@ int main(int argc, char *argv[]) {
     }
 
     int num_targets = 0;
-
+    
     printf("made it here\n");
 
     // check for lowercase then uppercase makefiles
-    if (((fp = fopen("/u/h/i/hickok/private/OS/Assignment3/tests/missing_tab/makefile", "r")) != NULL)) {
+    if (((fp = fopen("exMakefile", "r")) != NULL)) {
         parse_makefile(fp, &num_targets, target_list);
     } else if ((fp = fopen("Makefile", "r") != NULL)) {
         parse_makefile(fp, &num_targets, target_list);
     } else {
 	// print error if not found and exit
-        fprintf(stderr, "Cannot open makefile, invalid file.");
+        fprintf(stderr, "Cannot open makefile, invalid file.\n");
         exit(1);
     }
 
