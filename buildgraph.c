@@ -66,10 +66,10 @@ bool traverseGraph(Target *t) {
     // visit current node (root)
     t->visited=1;
     for (int i=0; i<t->num_dependencies; i++) {
-	Target *curr = getTarget(t->dependencies[i]); 
+	//Target *curr = getTarget(t->dependencies[i]); 
         // check if child is already visited and return true if yes
-        if (curr->visited==1) return true;
-	traverseGraph(curr);
+        //if (curr->visited==1) return true;
+	//traverseGraph(curr);
     }
 }
 
