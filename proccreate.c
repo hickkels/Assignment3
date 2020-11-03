@@ -87,7 +87,7 @@ int create_process(char *argv[]) {
         do {
             // 537make (parent) process will wait for the child process
             ppid = wait(&child_status);
-            if(ppid != child_pid) process_terminated(ppid);
+            if(ppid != child_pid) kill(ppid, SIGKILL);
         } while(ppid != child_pid);
 
         return child_status;
