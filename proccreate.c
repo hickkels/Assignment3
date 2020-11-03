@@ -14,7 +14,7 @@
 
 static int MAX_ARGS = 100; // Maximum number of arguments
 
-void run_command(Target *target, Target *target_array, int num_targets) {
+void run_command(Target *target, Target *target_array, int *num_targets) {
         
     char* argv[MAX_ARGS]; // argument array of strings
     pid_t child_pid; // process id for child process

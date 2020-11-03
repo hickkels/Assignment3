@@ -45,7 +45,7 @@ Target *create(char* dependencies, char** commands, int num_commands) {
     }
 
     // copy the first target_name_len chars into t->name
-    char targetName[target_name_len+1] = {0};
+    char targetName[target_name_len+1];
     strncpy(targetName, dependencies, target_name_len);
     targetName[target_name_len] = '\0'; // null terminator
     t->name = targetName;    
@@ -70,15 +70,15 @@ Target *create(char* dependencies, char** commands, int num_commands) {
     }
 
     // make array of char pointers for each line of commands
-    t->num_command_lines = num_strings-1;
-    t->command_lines = malloc(sizeof(char*)*num_strings-1);
+    t->num_command_lines = num_commands-1;
+    t->command_lines = malloc(sizeof(char*)*num_commands-1);
     if (t->command_lines==NULL) {
         fprintf(stderr,"Error while allocating command 2D char array\n");
         exit(1);
     }
 
-    for (int i=0; i<num_strings-1; i++) {
-        t->command_lines[i] = targetstrings[i+1];
+    for (int i=0; i<num_commands-1; i++) {
+        t->command_lines[i] = commands[i+1];
     }
 
     // set visited to false (0)

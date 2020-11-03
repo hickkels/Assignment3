@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
 
     // run process creation to run commands
     for (int i = 0; i < num_targets; i++) {
-        run_command(target_list[i], *target_array, num_targets);    
+        run_command(target_list[i], target_list, num_targets);    
     }
 }
 
