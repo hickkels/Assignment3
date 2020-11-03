@@ -9,7 +9,7 @@ Kelsey Hickok: khickok@wisc.edu, 9076435016
 typedef struct Target
 {
     char *name;
-    char *dependencies;
+    char **dependencies;
     int num_dependencies;
     char **command_lines;
     int num_command_lines;

@@ -46,13 +46,9 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
     /* get lines in makefile */
     while ((read = getline(&line, &len, makefile)) != -1) {
         firstCh = line[0]; // get the first character of the line
-        printf("%s\n", "first char");
-        printf("%c\n", firstCh);
         char *longLine = malloc(sizeof(char) * MAX_LINE);
         char *string = line; // set new string to the line contents
         linenum++; // increase line number
-        
-        printf("%s", string);    
 
         /* if line is too long */
         if (read > MAX_LINE) {
@@ -99,30 +95,19 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
                 // find target name
                 name = strtok(string,":");
             }
-            
             /* if there is no target name */
             if (name == NULL) {
                 // error
                 fprintf(stderr, "%d%s%s\n", linenum,": No valid target name : ", string);
             }
 
-            strcpy(depend, name);
-            
             /* if target is valid */
             while(depend != NULL) {
                 // get next string in the line
                 depend = strtok(NULL, " ");
 
-                /* get each string and check to see if valid dependency
-                // disregard right now
-                if (stat (*depend, &buffer) != 0) {
-                    fprintf(stderr, "%d%s%s\n", linenum,": Dependency not valid: ", line);
-                    exit(1);
-                }
-                */
-                
                 // add dependency to array
-                if (count!=0) d[count-1] = depend;
+		if (count!=0)  d[count-1] = depend;
                 count++;
             }
         } else if (firstCh == '>') {
@@ -169,14 +154,17 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
             exit(1);
         }
 
-        printf("%s\n", "Right before function");
-        printf("%c\n", firstCh);
         if (firstCh == '\n') {
             // pass array of dependencies and array of commands to build rep.
-            printf("%s\n", "Got to function");
-            // Target *t = create(name, d, count-1, c, num_commands);
-    	    // target_list[numTargets] = t;
-	        numTargets++;
+            printf("--------------\n");
+	    printf("name: %s\n", name);
+	    printf("num deps: %d\n", count-1);
+	    printf("num comms: %d\n", num_commands);
+	    printf("--------------\n");
+
+            Target *t = create(name, d, count-1, c, num_commands);
+    	    target_list[numTargets] = t;
+	    numTargets++;
             *num_targets= numTargets;
 	     
             // reset number of command lines
