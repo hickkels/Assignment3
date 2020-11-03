@@ -5,17 +5,24 @@
 
 #include "proccreate.h"
 #include <sys/types.h>
-#include <stat.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include "buildrep.h"
+#include <stdio.h>
 
 static int MAX_ARGS = 100; // Maximum number of arguments
 
-int run_command(char target, char *target_array) {
+void run_command(Target *target, Target *target_array) {
         
     char* argv[MAX_ARGS]; // argument array of strings
     pid_t child_pid; // process id for child process
     int child_status; // status of child
     struct stat *buf = malloc(sizeof(struct stat)); // allocation of memory for stat struct
+    Target *t = target;
+    Target *curr = NULL;
+    time_t dep_time;
 
     /* Target check */
     if (stat (t->name, buf) == 0) {
@@ -27,25 +34,25 @@ int run_command(char target, char *target_array) {
     }
     
     /* Command line is put into a list of arguments */
-    for (int b=0; b<num_command_lines; b++) {
-        argv[b] = t->*command_lines[0];
+    for (int b=0; b < t->num_command_lines; b++) {
+        argv[b] = t->command_lines[0];
     }
 
     /* Iterate through dependencies */
-    for (int k = 0; k < num_dependencies; k++) {
+    for (int k = 0; k < t->num_dependencies; k++) {
         // Dependence name is another target and that target is out of date
         for (int j=0; j < num_targets; j++) {
-            Target *curr = target_array[j];
+            *curr = target_array[j];
             if (t->dependencies[k] == curr->name) {
                 // If target time is out of date
-                if (buf->st_time > curr->modTime)         
+                if (buf->st_mtime > curr->modTime)         
                     create_process(argv);
             }
          }
         // If dependence name is a file whose modification time is more recent then the time of the target        
         if (stat (t->dependencies[k], buf) == 0) {
             dep_time = buf->st_mtime;
-            if (dep_time > target_time) {
+            if (dep_time > t->modTime) {
                 // Run commands
                 create_process(argv);
             }
@@ -61,6 +68,7 @@ int run_command(char target, char *target_array) {
 and check if they are valid */
 int create_process(char *argv[]) {
     pid_t child_pid; // process id for child process
+    pid_t ppid; // process id for parent process
     int child_status; // status of child
     
     // Fork a child process
@@ -78,9 +86,9 @@ int create_process(char *argv[]) {
         // This is run by the parent
         do {
             // 537make (parent) process will wait for the child process
-            pid_t tpid = wait(&child_status);
-            if(tpid != child_pid) process_terminated(tpid);
-        } while(tpid != child_pid);
+            ppid = wait(&child_status);
+            if(ppid != child_pid) process_terminated(ppid);
+        } while(ppid != child_pid);
 
         return child_status;
      }

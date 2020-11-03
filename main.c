@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     // TODO: find length of var
     // run process creation to run commands
     for (int i = 0; i < var; i++) {
-        run_command(target_array[i]);    
+        run_command(target[i], *target_array);    
     }
 }
 
