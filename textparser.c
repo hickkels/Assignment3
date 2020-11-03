@@ -46,6 +46,8 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
     /* get lines in makefile */
     while ((read = getline(&line, &len, makefile)) != -1) {
         firstCh = line[0]; // get the first character of the line
+        printf("%s\n", "first char");
+        printf("%c\n", firstCh);
         char *longLine = malloc(sizeof(char) * MAX_LINE);
         char *string = line; // set new string to the line contents
         linenum++; // increase line number
@@ -76,9 +78,8 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
         }    
    
         /* if comment or empty line */ 
-        if ((firstCh == '#') || (firstCh == '\n') ) {
+        if ((firstCh == '#')) {
             // ignore rest of line
-            
             continue;
         } else if (((firstCh != '>') && ((isalpha(firstCh))) || isdigit(firstCh))) {
             /* dependency declarations */
@@ -162,16 +163,19 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
                 count2++;
             }  
 
-        } else {
+        } else if (firstCh != '\n') {
             // if line doesn't start with a target name or tab 
             fprintf(stderr, "%d%s%s\n", linenum, ": Invalid line format: ", string);
             exit(1);
         }
 
+        printf("%s\n", "Right before function");
+        printf("%c\n", firstCh);
         if (firstCh == '\n') {
             // pass array of dependencies and array of commands to build rep.
-            Target *t = create(name, d, count-1, c, num_commands);
-    	    target_list[numTargets] = t;
+            printf("%s\n", "Got to function");
+            // Target *t = create(name, d, count-1, c, num_commands);
+    	    // target_list[numTargets] = t;
 	        numTargets++;
             *num_targets= numTargets;
 	     
