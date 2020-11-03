@@ -13,8 +13,8 @@ WARNING_FLAGS = -Wall -Wextra
 EXE = 537make
 SCAN_BUILD_DIR = scan-build-out
 
-all: main.o textparser.o buildgraph.o buildrep.o proccreate.o
-	$(CC) -o $(EXE) main.o textparser.o buildgraph.o buildrep.o proccreate.o
+all: main.o textparser.o buildgraph.o buildrep.o proccreate.o filerep.o
+	$(CC) -o $(EXE) main.o textparser.o buildgraph.o buildrep.o proccreate.o filerep.o
 
 main.o: main.c buildrep.h buildgraph.h proccreate.h textparser.h 
 	$(CC) -c $(WARNING_FLAGS) main.c
@@ -30,6 +30,9 @@ buildrep.o: buildrep.c buildrep.h
 
 proccreate.o: proccreate.c proccreate.h
 	$(CC) -c $(WARNING_FLAGS) proccreate.c
+
+filerep.o: filerep.c filerep.h
+	$(CC) -c $(WARNING_FLAGS) filerep.c
 
 clean:
 	rm -f $(EXE) *.o
