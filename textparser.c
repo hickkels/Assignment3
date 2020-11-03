@@ -14,28 +14,17 @@
 
 static int MAX_LINE = 4096;
 
-/* for testing purposes */
-int main(void)
-{
-    int k = 0;
-    while (k <= 5) {
-        parse_makefile();
-    }
-    return 0;
-}
-
 /* parse lines in the makefile
 * splits line into an array of strings
 * check whether a line begins with tab or regular char
 * filters out blank line
 * passes dependency and command arrays to build rep module
 */
-Target *parse_makefile() {
+void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
     /* makefile line variables */
     char *line = NULL; // line being read from makefile
     char *longLine = NULL; // used to print a line greater than a buffer
     char tab_chars[] = ">...";
-    FILE *makefile; // initialize makefile
     ssize_t read; // number of characters in line read
     size_t len = 0; // initial size of string
     
@@ -52,15 +41,6 @@ Target *parse_makefile() {
     int num_commands = 0; // number of command lines
 
     int numTargets = 0;
-    Target *targetArray = malloc(1000 * sizeof(Target)); // FIGURE OUT SIZE
-
-    for (int i=0; i<1000; i++) {
-	targetArray[i] = malloc(sizeof(Target));
-	if (targetArray[i]==NULL) {
-	    fprintf(stderr,"Error while allocating target array\n");
-	    exit(1);
-	}
-    }
         
     // open makefile
     makefile = fopen("/u/c/e/cecelia/Assigment3/makefile", "r");
@@ -187,14 +167,10 @@ Target *parse_makefile() {
         if (firstCh == '\n') {
             // pass array of dependencies and array of commands to build rep.
             Target *t = create(d, c, num_commands);
-	    targetArray[numTargets] = malloc(sizeof(struct Target));
-	    if (NULL==targetArray[numTargets]) {
-		fprintf(stderr,"Error while allocating target in array\n");
-		exit(1);
-	    }
-	    targetArray[numTargets] = t;
+	    target_list[numTargets] = t;
 	    numTargets++;
-            
+            *num_targets= numTargets;
+	     
             // reset number of command lines
             num_commands = 0;
         }

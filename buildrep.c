@@ -4,6 +4,8 @@
 
 #include "buildrep.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 /*
 * Create a target structure from the parsed array of input strings
@@ -13,7 +15,7 @@
 * ..
 * commandm ..
 */
-Target create(char* dependencies, char** commands, int num_commands) {
+Target *create(char* dependencies, char** commands, int num_commands) {
 
     // malloc target struct
     Target *t;
@@ -27,13 +29,11 @@ Target create(char* dependencies, char** commands, int num_commands) {
     char *first_line = dependencies;
     int first_line_len = sizeof(first_line);
 
-    char *target_name = "";   
-
     int dep_count = 0;
     int target_name_len = 0;
 
     int target_found_flag = 0;
-    for (i=0; i<first_line_len; i++) {
+    for (int i=0; i<first_line_len; i++) {
         while(first_line[i]!=':' && target_found_flag==0) {
 	    target_name_len++;
 	    i++;
@@ -53,7 +53,7 @@ Target create(char* dependencies, char** commands, int num_commands) {
     t->num_dependencies = dep_count;
 
     // make array of char pointers for each dependency
-    t->dependencies = malloc(sizeof(char*)*num_dependencies);
+    t->dependencies = malloc(sizeof(char*)*dep_count);
     if (t->dependencies==NULL) {
         fprintf(stderr,"Error while allocating dependency 2D char array\n");
         exit(1);
