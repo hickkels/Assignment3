@@ -20,7 +20,7 @@ static int MAX_LINE = 4096;
 * filters out blank line
 * passes dependency and command arrays to build rep module
 */
-void parse_makefile(FILE* makefile, int *num_targets, Target *target_list) {
+void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
     /* makefile line variables */
     char *line = NULL; // line being read from makefile
     char *longLine = NULL; // used to print a line greater than a buffer

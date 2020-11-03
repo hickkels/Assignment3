@@ -5,6 +5,7 @@
 #include "buildgraph.h"
 #include "buildrep.h"
 #include <stdio.h>
+#include <stdbool.h>
 
 /*
 * build the graph that represents dependencies between build specifications
@@ -23,11 +24,11 @@ void push(char stack[], int *stackTop, int stackSize, Target *target){
     if (*stackTop==0) {
         printf("stack is full, change stack implementation to total num targets\n");
     } else if(*stackTop==-1){
-	stack[stackSize - 1] = element;
-    	*top = stackSize - 1;
+	stack[stackSize - 1] = target;
+    	*stackTop = stackSize - 1;
     } else{
-        stack[(*top) - 1] = element;
-	(*top)--;
+        stack[(*stackTop) - 1] = target;
+	(*stackTop)--;
     }
 }
 
@@ -35,12 +36,12 @@ void pop(char stack[], int *stackTop, int stackSize){
     if(*stackTop==-1){
 	printf("Tried to pop, empty stack.\n");
     } else{
-  	printf("Popped: %c \n", stack[(*top)]);
+  	printf("Popped: %c \n", stack[(*stackTop)]);
     	// if we popped last element, move size around to -1
-	if((*top)==stackSize - 1){
-    	    (*top) = -1;
+	if((*stackTop)==stackSize - 1){
+    	    (*stackTop) = -1;
     	} else{
-    	    (*top)++;
+    	    (*stackTop)++;
     	}
     }
 }
@@ -65,22 +66,15 @@ bool traverseGraph(Target *t) {
     // visit current node (root)
     t->visited=1;
     for (int i=0; i<t->num_dependencies; i++) {
-	Target *curr = getTarget(t->dependencies[i]; 
+	Target *curr = getTarget(t->dependencies[i]); 
         // check if child is already visited and return true if yes
         if (curr->visited==1) return true;
 	traverseGraph(curr);
     }
 }
 
-Target *getTarget(char *name) {
+Target *findTarget(char *name, Target *target_list, int *num_targets) {
 
-    // iterate through each target checking for the name
-    
-
-}
-
-Target *findTarget(char *name, Target *target_list) {
-
-    
+       
 
 }
