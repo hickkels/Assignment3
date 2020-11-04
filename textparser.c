@@ -33,7 +33,8 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
     char *tab; // characters of tab string
     char **c;
     char **d;
-    char *name;
+    char *name = malloc(sizeof(char) * read);
+    int name_flag = 0;
         
     /* counter variables */
     int count, count2, i; // iterators 
@@ -83,7 +84,12 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
     
             // find target name
             depend = strtok(string,":");
-            
+	    if (0==name_flag) {
+		if (NULL==name) exit(1);
+		strcpy(name, depend);
+		name_flag = 1;
+	    }  
+
             /* if there is no target name */
             if (depend == NULL) {
                 // error
@@ -168,6 +174,7 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
 	    }
             // reset number of command lines
             num_commands = 0;
+	    name_flag = 0;
         }
     }
     fclose(makefile);
