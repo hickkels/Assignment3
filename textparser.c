@@ -106,16 +106,8 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
             while(depend != NULL) {
                 printf("%s%s\n", "Dependency: ", depend);
                 // get next string in the line
-                d[count] = depend;
+                if (count!=0) d[count-1] = depend;
                 depend = strtok(NULL, " ");
-                
-                /* get each string and check to see if valid dependency
-                // disregard right now
-                if (stat (*depend, &buffer) != 0) {
-                    fprintf(stderr, "%d%s%s\n", linenum,": Dependency not valid: ", line);
-                    exit(1);
-                }
-                */
                 
                 // add dependency to array
                 num_depends++;
@@ -167,18 +159,21 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
         
         if (firstCh == '\n') {
             // pass array of dependencies and array of commands to build rep.
-            create(name, d, num_depends, c, num_commands);
+            create(name, d, num_depends-1, c, num_commands);
             printf("name: %s\n", name);
-        
-            printf("DEPS: %s\n", *d);
-            printf("COMS: %s\n", *c);
-            printf("num depends: %d\n", num_depends);
-	        printf("num commands: %d\n", num_commands);
- 	        
+           
+            printf("num depends: %d\n", num_depends-1);
+	    for (int i=0; i<num_depends-1; i++) {
+		printf("dep%d: %s\n", i, d[i]);
+	    }
+
+	    printf("num commands: %d\n", num_commands);
+ 	    for (int i=0; i<4; i++) {
+		printf("comm%d: %s\n", i, c[i]);
+	    }       
+
             name_flag = 0;
             num_commands = 0;
-        }
-	    }
         }
     }
     fclose(makefile);
