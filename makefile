@@ -9,7 +9,7 @@ WARNING_FLAGS = -g -Wall -Wextra
 #      window to review the results.
 #
 CC = gcc
-WARNING_FLAGS = -Wall -Wextra
+WARNING_FLAGS = -g -Wall -Wextra
 EXE = 537make
 SCAN_BUILD_DIR = scan-build-out
 

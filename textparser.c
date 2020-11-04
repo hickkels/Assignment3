@@ -40,15 +40,21 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
     int count, count2, i; // iterators 
     int linenum = 0; // makefile line number
     int num_commands = 0; // number of command lines
-    char *name;
+    char *name = malloc(sizeof(char) * 20);
     int numTargets = 0;
         
     /* get lines in makefile */
     while ((read = getline(&line, &len, makefile)) != -1) {
         firstCh = line[0]; // get the first character of the line
         char *longLine = malloc(sizeof(char) * MAX_LINE);
-        char *string = line; // set new string to the line contents
+        char *string = malloc(sizeof(char) * read);
+        strcpy(string,line); // set new string to the line contents
         linenum++; // increase line number
+
+        if (longLine == NULL) {
+            fprintf(stderr, "%s\n", "Null pointer.");
+            exit(1);            
+        }
 
         /* if line is too long */
         if (read > MAX_LINE) {
@@ -82,12 +88,22 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
             count = 0;
             char* depend = malloc(sizeof(char) * read);
             d = malloc(sizeof(char) * read);
-            
+
+            if (depend == NULL) {
+                fprintf(stderr, "%s\n", "Null pointer.");
+                exit(1);
+            }
+
+            if (d == NULL) {
+                fprintf(stderr, "%s\n", "Null pointer.");
+                exit(1);
+            }
+                        
             for (int a = 0; a < read; a++) {
                 if(string[a] == ':')
                     colon = true;
             }
-            
+                        
             if (colon == false) {
                 fprintf(stderr, "%d%s%s\n", linenum, ": Invalid line format : ", string);
                 exit(1);
@@ -95,21 +111,32 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
                 // find target name
                 name = strtok(string,":");
             }
+            
+            printf("Name: %s\n", name);
             /* if there is no target name */
+            
             if (name == NULL) {
                 // error
                 fprintf(stderr, "%d%s%s\n", linenum,": No valid target name : ", string);
+                exit(1);
             }
+            
+            printf("Depend before loop: %s\n", depend);
 
             /* if target is valid */
             while(depend != NULL) {
                 // get next string in the line
-                depend = strtok(NULL, " ");
-
-                // add dependency to array
-		if (count!=0)  d[count-1] = depend;
+                depend = strtok(NULL," ");
+                printf("Depend: %s\n", depend);
+                strcpy((d+count),depend);
                 count++;
+                // add dependency to array
+		        //if (count!=0)  d[count-1] = depend;
+                    //count++;
+                printf("Depend in array: %s\n", (d+count));
+                printf("Depend: %s\n", depend);
             }
+            printf("Name after loop: %s\n", name);
         } else if (firstCh == '>') {
             /* command declarations */
             count2 = 0;
@@ -117,6 +144,18 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
             char *command = malloc(sizeof(char) * read);
             c = malloc(sizeof(char) * read);
             string_without_tab = malloc(sizeof(char) * read);
+
+            if (command == NULL) {
+                fprintf(stderr, "%s\n", "Null pointer.");
+                exit(1);
+            }            
+
+            if (c == NULL) {
+                fprintf(stderr, "%s\n", "Null pointer.");
+                exit(1);
+            }
+
+            printf("Name in cmd: %s\n", name);
             
             /* get the first 4 characters of the line */
             for (int j = 0; j < 4; j++) {
@@ -126,7 +165,7 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
             /* if tab isn't equal to the correct tab characters */
             if (strcmp(tab, tab_chars) == 0) {    
                 // error
-                printf(stderr, "%d%s%s\n", linenum, ": Invalid line format: ", string);
+                fprintf(stderr, "%d%s%s\n", linenum, ": Invalid line format: ", string);
                 exit(1);
             }
 
@@ -144,9 +183,12 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
             while(command != NULL) {
                 // get the next command of the line
                 command = strtok(NULL, " ");
-                c[count2] = command;
+                strcpy((c+count2),command);
                 count2++;
+                printf("Command: %s\n", command);
             }  
+
+            printf("Name out of cmd: %s\n", name);
 
         } else if (firstCh != '\n') {
             // if line doesn't start with a target name or tab 
@@ -156,15 +198,22 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
 
         if (firstCh == '\n') {
             // pass array of dependencies and array of commands to build rep.
-            printf("--------------\n");
-	    printf("name: %s\n", name);
-	    printf("num deps: %d\n", count-1);
-	    printf("num comms: %d\n", num_commands);
-	    printf("--------------\n");
+            for (int j=0; j<count2; j++) {
+                printf("%s\d",c[j]);
+            }
 
+            printf("--------------\n");
+    	    printf("name: %s\n", name);
+	        printf("num deps: %d\n", count-1);
+	        printf("num comms: %d\n", num_commands);
+            for (int i=0; i<num_commands; i++) {
+                printf("c %d: %\n", i, c[i]);
+            }
+	        printf("--------------\n");
+            
             Target *t = create(name, d, count-1, c, num_commands);
     	    target_list[numTargets] = t;
-	    numTargets++;
+	        numTargets++;
             *num_targets= numTargets;
 	     
             // reset number of command lines

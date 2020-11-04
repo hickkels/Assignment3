@@ -34,17 +34,17 @@ int main(int argc, char *argv[]) {
 
     printf("AYYYE\n");
     for (int i = 0; i<num_targets; i++) {
-        printf("i %d\n", i);
+        //printf("i %d\n", i);
         Target *curr = target_list[i];
-        printf("name of target: %s\n", curr->name);
-	printf("num dependencies: %d\n", curr->num_dependencies); 
+        //printf("name of target: %s\n", curr->name);
+	    //printf("num dependencies: %d\n", curr->num_dependencies); 
         for (int i=0; i<curr->num_dependencies; i++) {
-	    printf("dep %d: %s\n", i, curr->dependencies[i]);
+	    //printf("dep %d: %s\n", i, curr->dependencies[i]);
 	}
         printf(" \n");
-        printf("num commands: %d\n", curr->num_command_lines);
+        //printf("num commands: %d\n", curr->num_command_lines);
         for (int i=0; i<curr->num_command_lines; i++) {
-             printf("comm %d: %s\n", i, curr->command_lines[i]);
+             //printf("comm %d: %s\n", i, curr->command_lines[i]);
         }
     }
 
