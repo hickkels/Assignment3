@@ -124,7 +124,6 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
         } else if (firstCh == '>') {
             /* command declarations */
             count2 = 0;
-            num_commands++;
             strcpy(com_string, line);
             tab = malloc(sizeof(char) *4);
             string_without_tab = malloc(sizeof(char) * read);
@@ -157,6 +156,7 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
                 // get the next command of the line
                 c[count2] = command;
                 command = strtok(NULL, " ");
+                num_commands++;
                 count2++;
             }
         } else if (firstCh!='\n') {
@@ -167,7 +167,7 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
         
         if (firstCh == '\n') {
             // pass array of dependencies and array of commands to build rep.
-            create(name, d, num_depends, c, num_commands);
+            create(name, d, (num_depends-1), c, num_commands);
             printf("name: %s\n", name);
         
             printf("DEPS: %s\n", *d);
@@ -177,8 +177,7 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
  	        
             name_flag = 0;
             num_commands = 0;
-        }
-	    }
+            num_depends = 0;
         }
     }
     fclose(makefile);
