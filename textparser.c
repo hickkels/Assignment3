@@ -157,7 +157,15 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
         if (firstCh == '\n') {
             // pass array of dependencies and array of commands to build rep.
             create(name, d, count, c, num_commands);
-            
+            printf("name: %s\n", name);
+	    printf("num dependencies: %d\n", count);
+	    for (int i=0; i<count; i++) {
+	        printf("     dep%d: %s\n", i, d[i]);           
+ 	    }
+	    printf("num commands: %d\n", num_commands);
+	    for (int i=0; i<num_commands; i++) {
+		printf("     com%d: %s\n", i, c[i]);
+	    }
             // reset number of command lines
             num_commands = 0;
         }
