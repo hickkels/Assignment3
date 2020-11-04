@@ -36,7 +36,7 @@ int count_files(Target **target_list, int num_targets) {
 * Create a function to see if a file name is contained in array of file pointers 
 * Return 1 if yes, 0 if no, 2 if file name not found
 */
-int file_visited(char *name, File **file_list, int *num_files) {
+int file_visited(char *name, File **file_list, int num_files) {
     for (int i=0; i<num_files; i++) {
 	File *curr = file_list[i];
 	if (strcmp(curr->name, name)==0) return curr->visited;
@@ -53,7 +53,7 @@ int createFileStructs(File **file_list, int file_count, Target **target_list, in
 	Target *curr = target_list[i];
 	for (int j=0; j<curr->num_dependencies; j++) {
 
-	    char *dep_name = curr->depencencies[i];
+	    char *dep_name = curr->dependencies[i];
 	    int flag = fileExists(file_list, num_unique_files, dep_name);
 	    if (flag==0) {
                 File *f;

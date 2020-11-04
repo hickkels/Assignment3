@@ -2,6 +2,7 @@
 #include "buildrep.h"
 #include "proccreate.h"
 #include "textparser.h"
+#include "filerep.h"
 #include<stdio.h>
 #include<stdlib.h>
 
@@ -66,7 +67,7 @@ int main(int argc, char *argv[]) {
     int num_unique_files = createFileStructs(file_list, &file_count, target_list, &num_targets);
 
     // iterate through array of target structure
-    traverseGraph(target_list[i], target_list, &num_targets);
+    buildGraph(target_list, num_targets);
 
     // run process creation to run commands
     for (int i = 0; i < num_targets; i++) {
