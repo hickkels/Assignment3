@@ -16,7 +16,7 @@ SCAN_BUILD_DIR = scan-build-out
 all: main.o textparser.o buildgraph.o buildrep.o proccreate.o filerep.o
 	$(CC) -o $(EXE) main.o textparser.o buildgraph.o buildrep.o proccreate.o filerep.o
 
-main.o: main.c buildrep.h buildgraph.h proccreate.h textparser.h 
+main.o: main.c buildrep.h buildgraph.h proccreate.h textparser.h filerep.h 
 	$(CC) -c $(WARNING_FLAGS) main.c
 
 textparser.o: textparser.c textparser.h buildrep.h
@@ -25,14 +25,14 @@ textparser.o: textparser.c textparser.h buildrep.h
 buildgraph.o: buildgraph.c buildgraph.h buildrep.h
 	$(CC) -c $(WARNING_FLAGS) buildgraph.c
 
+filerep.o: filerep.c filerep.h buildrep.h
+	$(CC) -c $(WARNING_FLAGS) filerep.c
+
 buildrep.o: buildrep.c buildrep.h
 	$(CC) -c $(WARNING_FLAGS) buildrep.c
 
 proccreate.o: proccreate.c proccreate.h
 	$(CC) -c $(WARNING_FLAGS) proccreate.c
-
-filerep.o: filerep.c filerep.h
-	$(CC) -c $(WARNING_FLAGS) filerep.c
 
 clean:
 	rm -f $(EXE) *.o

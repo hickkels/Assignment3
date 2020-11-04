@@ -59,7 +59,7 @@ void pop(char stack[], int *stackTop, int stackSize){
 * -call recursively on each node in array of dependencies
 * -return true if dependency, otherwise false
 */
-int traverseGraph(Target *t, Target **target_list, int *num_targets) {
+int traverseGraph(Target *t, Target **target_list, int num_targets) {
 
     // BASE CASE: node has no dependencies
     if (t->num_dependencies==0) {
@@ -74,7 +74,7 @@ int traverseGraph(Target *t, Target **target_list, int *num_targets) {
 	Target *curr = findTarget(t->dependencies[i], target_list, num_targets); 
         // check if child is already visited and return true if yes
         if (curr->visited==1) return true;
-	traverseGraph(curr);
+	traverseGraph(curr, target_list, num_targets);
     }
 }
 

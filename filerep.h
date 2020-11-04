@@ -5,6 +5,7 @@ Kelsey Hickok: khickok@wisc.edu, 9076435016
 #ifndef FILE_REP_H_
 #define FILE_REP_H_
 #include<time.h>
+#include "buildrep.h"
 
 typedef struct File
 {
@@ -14,7 +15,7 @@ typedef struct File
 
 File *create_file(char *name);
 int file_visited(char *name, File **file_list, int num_files);
-int count_files(Target **target_list, int *num_targets);
+int count_files(Target **target_list, int num_targets);
 int createFileStructs(File **file_list, int file_count, Target **target_list, int *num_targets);
 int fileExists(File **file_list, int file_count, char *name);
 
