@@ -18,14 +18,17 @@
 void create(char *name, char** dependencies, int num_depends, char** commands, int num_commands, Target **target_list, int num_targets) {
 
     // malloc target struct
-    target_list[num_targets] = malloc(sizeof(Target));
-    if (NULL==target_list[num_targets]) {
-        fprintf(stderr,"Error while allocating target\n");
-        exit(1);
-    }
+    //target_list[num_targets] = malloc(sizeof(Target));
+    //if (NULL==target_list[num_targets]) {
+    //    fprintf(stderr,"Error while allocating target\n");
+    //    exit(1);
+    //}
 
     target_list[num_targets]->name = name;
+    //strcpy(target_list[num_targets]->name, name);
+    
     printf("THIS IS THE NAME OF THE TARGET WERE CREATING %s\n", name);
+    printf("num_target: %d\n", num_targets);
     target_list[num_targets]->dependencies = dependencies;
     target_list[num_targets]->num_dependencies = num_depends;
     target_list[num_targets]->command_lines = commands;

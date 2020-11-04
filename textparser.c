@@ -35,8 +35,8 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
     char **c = (char**)malloc(sizeof(char*) * MAX_LINE);
     char **d = (char**)malloc((sizeof(char*) * MAX_LINE));
     char *name = malloc(sizeof(char) * 100);
-    char *depend = malloc(sizeof(char) * read);
-    char *command = malloc(sizeof(char) * read);
+    char *depend = malloc(sizeof(char) * 100);
+    char *command = malloc(sizeof(char) * 100);
     char *dep_string = malloc(sizeof(char) * MAX_LINE);
     char *com_string = malloc(sizeof(char) * MAX_LINE);
     
@@ -48,11 +48,12 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
     int count, count2; // iterators 
     int linenum = 0; // makefile line number
     int num_commands = 0; // number of command lines
-    int num_depends = 0;
-
+    int num_depends = 0; // number of dependency lines
+    
     /* get lines in makefile */
     while ((read = getline(&line, &len, makefile)) != -1) {
-        firstCh = line[0]; // get the first character of the line
+	
+	firstCh = line[0]; // get the first character of the line
         //strcpy(string,line); // set new string to the line contents
         linenum++; // increase line number
         
@@ -94,7 +95,7 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
 	    if (0==name_flag) {
 		if (NULL==name) exit(1);
 		strcpy(name, depend);
-        i++;
+                i++;
 		name_flag = 1;
 	    }  
 
@@ -162,37 +163,28 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
         
         if (firstCh == '\n') {
             // pass array of dependencies and array of commands to build rep.
-            create(name, d, num_depends-1, c, num_commands, target_list, *num_targets);
-	    printf("THIS IS THE NAME WHEN WE GET BACK TO THE PARSER ... %s\n", target_list[*num_targets]->name);
-	    printf("for target number %d\n", *num_targets);
+	    create(name, d, num_depends-1, c, num_commands, target_list, *num_targets);
 
-	    for (int i=0; i<(*num_targets)+1; i++) {
-		printf("%d: %d\n", i, &target_list[i]);
-		printf("%d: %d\n", i, target_list[i]);
-		printf("%d: %s\n", i, target_list[i]->name);
-	    }
-
-            printf("name: %s\n", name);
-           
-            printf("num depends: %d\n", num_depends-1);
-	    for (int i=0; i<num_depends-1; i++) {
-		printf("dep%d: %s\n", i, d[i]);
-	    }
-
-	    printf("num commands: %d\n", num_commands);
- 	    for (int i=0; i<num_commands; i++) {
-		printf("comm%d: %s\n", i, c[i]);
-	    }   
 	    *num_targets = *num_targets + 1;    
             
             name_flag = 0;
             num_commands = 0;
             num_depends = 0;
+	    c = (char**)malloc(sizeof(char*) * MAX_LINE);
+            d = (char**)malloc((sizeof(char*) * MAX_LINE));
+            name = malloc(sizeof(char) * 100);
+            depend = malloc(sizeof(char) * 100);
+            command = malloc(sizeof(char) * 100);
+            dep_string = malloc(sizeof(char) * MAX_LINE);
+            com_string = malloc(sizeof(char) * MAX_LINE);
+
         }
     }
+
     if ((firstCh == '\n') || (firstCh == '>') || (isalpha(firstCh)) ||(isdigit(firstCh))) {
         create(name, d, num_depends-1, c, num_commands, target_list, *num_targets);
+        *num_targets = *num_targets + 1;
     }
-    return *target_list;
+
     fclose(makefile);
 }
