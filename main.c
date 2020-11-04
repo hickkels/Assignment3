@@ -24,9 +24,9 @@ int main(int argc, char *argv[]) {
 
     // check for lowercase then uppercase makefiles
     if (((fp = fopen("ex2Makefile", "r")) != NULL)) {
-        target_list[num_targets] = parse_makefile(fp, &num_targets, target_list);
+        parse_makefile(fp, &num_targets, target_list);
     } else if ((fp = fopen("Makefile", "r") != NULL)) {
-        target_list[num_targets] = parse_makefile(fp, &num_targets,target_list);
+        parse_makefile(fp, &num_targets,target_list);
     } else {
 	// print error if not found and exit
         fprintf(stderr, "Cannot open makefile, invalid file.\n");
