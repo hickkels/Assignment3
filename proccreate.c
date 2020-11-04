@@ -41,7 +41,7 @@ void run_command(Target *target, Target *target_array, int *num_targets) {
     /* Iterate through dependencies */
     for (int k = 0; k < t->num_dependencies; k++) {
         // Dependence name is another target and that target is out of date
-        for (int j=0; j < num_targets; j++) {
+        for (int j=0; j < *num_targets; j++) {
             *curr = target_array[j];
             if (t->dependencies[k] == curr->name) {
                 // If target time is out of date

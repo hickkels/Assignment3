@@ -6,40 +6,38 @@
 #include<stdio.h>
 #include<stdlib.h>
 
+
 int main(int argc, char *argv[]) {
 
     FILE *fp; // call text parser on file
-    struct Target *target_list[100]; // text parser will return an array of targets
-    for (int i=0; i<100; i++) {
-	target_list[i] = (struct Target*) malloc(sizeof(struct Target));
-        if (NULL==target_list[i]) {
+    struct Target **target_list[100]; // text parser will return an array of targets
+    //for (int i=0; i<100; i++) {
+	target_list[100] = (struct Target*) malloc(sizeof(struct Target));
+        if (NULL==target_list[100]) {
             fprintf(stderr,"Error while allocating target in array\n");
             exit(1);
-        }
-    }
+         }
+    // }
 
     int num_targets = 0;
     
     printf("made it here\n");
 
     // check for lowercase then uppercase makefiles
-    if (((fp = fopen("exMakefile", "r")) != NULL)) {
-        *target_list = parse_makefile(fp, &num_targets, target_list);
+    if (((fp = fopen("ex2Makefile", "r")) != NULL)) {
+        target_list[num_targets] = parse_makefile(fp, &num_targets, target_list);
     } else if ((fp = fopen("Makefile", "r") != NULL)) {
-        *target_list = parse_makefile(fp, &num_targets, target_list);
+        target_list[num_targets] = parse_makefile(fp, &num_targets,target_list);
     } else {
 	// print error if not found and exit
         fprintf(stderr, "Cannot open makefile, invalid file.\n");
         exit(1);
     }
     
-    for (int a=0; a<num_targets; a++) {
-        struct Target *many_targets[num_targets];
-    }
     
     printf("%s%d\n", "# TARGS", num_targets);
     for (int b = 0; b<num_targets; b++) {
-        printf("%s%s\n", "TARGET", (int)target_list[b]);
+        printf("%s%s\n", "TARGET", target_list[b]);
     }
     
     /* run process creation to run commands

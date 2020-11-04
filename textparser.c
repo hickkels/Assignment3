@@ -20,7 +20,7 @@ static int MAX_LINE = 4096;
 * filters out blank line
 * passes dependency and command arrays to build rep module
 */
-char* parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
+char** parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
     /* makefile line variables */
     char *line = NULL; // line being read from makefile
     char *longLine; // used to print a line greater than a buffer
@@ -54,7 +54,7 @@ char* parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
         firstCh = line[0]; // get the first character of the line
         //strcpy(string,line); // set new string to the line contents
         linenum++; // increase line number
-        
+        longLine = malloc(sizeof(char) * MAX_LINE);        
         printf("%s", line);    
 
         /* if line is too long */
@@ -90,13 +90,20 @@ char* parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
             strcpy(dep_string,line);
             // find target name
             depend = strtok(dep_string,":");
-	    if (0==name_flag) {
-		if (NULL==name) exit(1);
-		strcpy(name, depend);
-        i++;
-        *num_targets = *num_targets + 1;
-		name_flag = 1;
-	    }  
+    	    
+            for (int x=0; x<strlen(dep_string); x++) {
+                if (dep_string[x] == ' ') {
+                    fprintf(stderr, "%d%s%s\n", linenum,": Invalid line format: ", dep_string);
+                }
+            }
+            
+            if (0==name_flag) {
+	        	if (NULL==name) exit(1);
+		        strcpy(name, depend);
+                i++;
+                *num_targets = *num_targets + 1;
+		        name_flag = 1;
+	        }  
 
             /* if there is no target name */
             if (depend == NULL) {
@@ -116,7 +123,7 @@ char* parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
                 num_depends++;
                 count++;
             }
-        } else if (firstCh == '>') {
+        } else if ((firstCh == '>') || (firstCh = '\t')) {
             /* command declarations */
             count2 = 0;
             strcpy(com_string, line);
@@ -129,7 +136,7 @@ char* parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
             }
 
             /* if tab isn't equal to the correct tab characters */
-            if (tab == ">...") {    
+            if ((tab == ">...") || (tab == " \t")) {    
                 // error
                 printf(stderr, "%d%s%s\n", linenum, ": Invalid line format: ", com_string);
                 exit(1);
@@ -162,7 +169,7 @@ char* parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
         
         if (firstCh == '\n') {
             // pass array of dependencies and array of commands to build rep.
-            target_list[i] = create(name, d, num_depends-1, c, num_commands);
+            strcpy(*target_list+i, create(name, d, num_depends-1, c, num_commands));
             printf("name: %s\n", name);
            
             printf("num depends: %d\n", num_depends-1);
@@ -180,9 +187,10 @@ char* parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
             num_depends = 0;
         }
     }
-    if ((firstCh == '\n') || (firstCh == '>') || (isalpha(firstCh)) ||(isdigit(firstCh))) {
-        target_list[i] = create(name, d, num_depends-1, c, num_commands);
+    
+    if ((firstCh == '>') || (isalpha(firstCh)) ||(isdigit(firstCh))) {
+        strcpy(*target_list+i, create(name, d, num_depends-1, c, num_commands));
     }
-    return *target_list;
+    return target_list;
     fclose(makefile);
 }
