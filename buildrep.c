@@ -25,6 +25,7 @@ Target *create(char *name, char** dependencies, int num_depends, char** commands
         exit(1);
     }
 
+    printf("%s\n", "MADE IT");
     t->name = name;
     t->dependencies = dependencies;
     t->num_dependencies = num_depends;

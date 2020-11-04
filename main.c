@@ -24,14 +24,29 @@ int main(int argc, char *argv[]) {
 
     // check for lowercase then uppercase makefiles
     if (((fp = fopen("exMakefile", "r")) != NULL)) {
-        parse_makefile(fp, &num_targets, target_list);
+        *target_list = parse_makefile(fp, &num_targets, target_list);
     } else if ((fp = fopen("Makefile", "r") != NULL)) {
-        parse_makefile(fp, &num_targets, target_list);
+        *target_list = parse_makefile(fp, &num_targets, target_list);
     } else {
 	// print error if not found and exit
         fprintf(stderr, "Cannot open makefile, invalid file.\n");
         exit(1);
     }
+    
+    for (int a=0; a<num_targets; a++) {
+        struct Target *many_targets[num_targets];
+    }
+    
+    printf("%s%d\n", "# TARGS", num_targets);
+    for (int b = 0; b<num_targets; b++) {
+        printf("%s%s\n", "TARGET", (int)target_list[b]);
+    }
+    
+    /* run process creation to run commands
+    for (int i = 0; i < num_targets; i++) {
+        run_command(target_list[i], target_list, num_targets);
+    }
+    */
 
     printf("------------TARGETS in main (%d total)----------\n", num_targets);
     printf("\n");
@@ -41,7 +56,8 @@ int main(int argc, char *argv[]) {
         //printf("name of target: %s\n", curr->name);
 	    //printf("num dependencies: %d\n", curr->num_dependencies); 
         for (int i=0; i<curr->num_dependencies; i++) {
-	    //printf("dep %d: %s\n", i, curr->dependencies[i]);
+	        printf("dep %d: %d\n", i, curr->num_dependencies);
+            printf("dep %d: %s\n", i, curr->dependencies[i]);
 	    }
         printf(" \n");
         //printf("num commands: %d\n", curr->num_command_lines);
@@ -70,9 +86,11 @@ int main(int argc, char *argv[]) {
     // iterate through array of target structure
     buildGraph(target_list, num_targets);
 
-    // run process creation to run commands
+    /* run process creation to run commands
     for (int i = 0; i < num_targets; i++) {
         run_command(target_list[i], target_list, num_targets);    
     }
+    */
+    return 0;
 }
 
