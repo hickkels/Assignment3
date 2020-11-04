@@ -13,6 +13,9 @@ typedef struct File
 } File;
 
 File *create_file(char *name);
-int file_visited(File *f, File **file_list, int num_files);
+int file_visited(char *name, File **file_list, int num_files);
+int count_files(Target **target_list, int *num_targets);
+int createFileStructs(File **file_list, int file_count, Target **target_list, int *num_targets);
+int fileExists(File **file_list, int file_count, char *name);
 
 #endif // FILE_REP_H
