@@ -9,14 +9,15 @@
 int main(int argc, char *argv[]) {
 
     FILE *fp; // call text parser on file
-    struct Target *target_list[100]; // text parser will return an array of targets
-    for (int i=0; i<100; i++) {
-	target_list[i] = (struct Target*) malloc(sizeof(struct Target));
-        if (NULL==target_list[i]) {
-            fprintf(stderr,"Error while allocating target in array\n");
-            exit(1);
-        }
-    }
+    Target *target_list[100];
+    //target_list = malloc(sizeof(Target *)*100); // text parser will return an array of targets
+    //for (int i=0; i<100; i++) {
+    //	target_list[i] = (struct Target*) malloc(sizeof(struct Target));
+    //    if (NULL==target_list[i]) {
+    //      fprintf(stderr,"Error while allocating target in array\n");
+    //        exit(1);
+    //    }
+    //}
 
     int num_targets = 0;
     
@@ -24,9 +25,9 @@ int main(int argc, char *argv[]) {
 
     // check for lowercase then uppercase makefiles
     if (((fp = fopen("exMakefile", "r")) != NULL)) {
-        *target_list = parse_makefile(fp, &num_targets, target_list);
+        parse_makefile(fp, &num_targets, &target_list);
     } else if ((fp = fopen("Makefile", "r") != NULL)) {
-        *target_list = parse_makefile(fp, &num_targets, target_list);
+        parse_makefile(fp, &num_targets, &target_list);
     } else {
 	// print error if not found and exit
         fprintf(stderr, "Cannot open makefile, invalid file.\n");
@@ -39,7 +40,7 @@ int main(int argc, char *argv[]) {
     
     printf("%s%d\n", "# TARGS", num_targets);
     for (int b = 0; b<num_targets; b++) {
-        printf("%s%s\n", "TARGET", (int)target_list[b]);
+//        printf("%s%s\n", "TARGET", (int)target_list[b]);
     }
     
     /* run process creation to run commands
@@ -50,22 +51,22 @@ int main(int argc, char *argv[]) {
 
     printf("------------TARGETS in main (%d total)----------\n", num_targets);
     printf("\n");
-    for (int i = 0; i<num_targets; i++) {
+//    for (int i = 0; i<num_targets; i++) {
         //printf("i %d\n", i);
-        Target *curr = target_list[i];
+  //      Target *curr = target_list[i];
         //printf("name of target: %s\n", curr->name);
 	    //printf("num dependencies: %d\n", curr->num_dependencies); 
-        for (int i=0; i<curr->num_dependencies; i++) {
-	        printf("dep %d: %d\n", i, curr->num_dependencies);
-            printf("dep %d: %s\n", i, curr->dependencies[i]);
-	    }
-        printf(" \n");
+//        for (int i=0; i<curr->num_dependencies; i++) {
+//	        printf("dep %d: %d\n", i, curr->num_dependencies);
+ //           printf("dep %d: %s\n", i, curr->dependencies[i]);
+//	    }
+  //      printf(" \n");
         //printf("num commands: %d\n", curr->num_command_lines);
-        for (int i=0; i<curr->num_command_lines; i++) {
+  //      for (int i=0; i<curr->num_command_lines; i++) {
              //printf("comm %d: %s\n", i, curr->command_lines[i]);
-        }
-	    printf("\n");
-    }
+    //    }
+//	    printf("\n");
+   // }
 
     // count file dependencies
     int file_count = count_files(target_list, &num_targets);

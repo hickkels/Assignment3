@@ -20,7 +20,7 @@ static int MAX_LINE = 4096;
 * filters out blank line
 * passes dependency and command arrays to build rep module
 */
-char* parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
+void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
     /* makefile line variables */
     char *line = NULL; // line being read from makefile
     char *longLine; // used to print a line greater than a buffer
@@ -42,6 +42,7 @@ char* parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
     
     int name_flag = 0;
     int i = -1;
+    *num_targets = 0;
     
     /* counter variables */
     int count, count2; // iterators 
@@ -94,7 +95,6 @@ char* parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
 		if (NULL==name) exit(1);
 		strcpy(name, depend);
         i++;
-        *num_targets = *num_targets + 1;
 		name_flag = 1;
 	    }  
 
@@ -162,7 +162,16 @@ char* parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
         
         if (firstCh == '\n') {
             // pass array of dependencies and array of commands to build rep.
-            target_list[i] = create(name, d, num_depends-1, c, num_commands);
+            create(name, d, num_depends-1, c, num_commands, target_list, *num_targets);
+	    printf("THIS IS THE NAME WHEN WE GET BACK TO THE PARSER ... %s\n", target_list[*num_targets]->name);
+	    printf("for target number %d\n", *num_targets);
+
+	    for (int i=0; i<(*num_targets)+1; i++) {
+		printf("%d: %d\n", i, &target_list[i]);
+		printf("%d: %d\n", i, target_list[i]);
+		printf("%d: %s\n", i, target_list[i]->name);
+	    }
+
             printf("name: %s\n", name);
            
             printf("num depends: %d\n", num_depends-1);
@@ -173,7 +182,8 @@ char* parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
 	    printf("num commands: %d\n", num_commands);
  	    for (int i=0; i<num_commands; i++) {
 		printf("comm%d: %s\n", i, c[i]);
-	    }       
+	    }   
+	    *num_targets = *num_targets + 1;    
             
             name_flag = 0;
             num_commands = 0;
@@ -181,7 +191,7 @@ char* parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
         }
     }
     if ((firstCh == '\n') || (firstCh == '>') || (isalpha(firstCh)) ||(isdigit(firstCh))) {
-        target_list[i] = create(name, d, num_depends-1, c, num_commands);
+        create(name, d, num_depends-1, c, num_commands, target_list, *num_targets);
     }
     return *target_list;
     fclose(makefile);

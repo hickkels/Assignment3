@@ -15,29 +15,27 @@
 * ..
 * commandm ..
 */
-Target *create(char *name, char** dependencies, int num_depends, char** commands, int num_commands) {
+void create(char *name, char** dependencies, int num_depends, char** commands, int num_commands, Target **target_list, int num_targets) {
 
     // malloc target struct
-    Target *t;
-    t = malloc(sizeof(Target));
-    if (NULL==t) {
+    target_list[num_targets] = malloc(sizeof(Target));
+    if (NULL==target_list[num_targets]) {
         fprintf(stderr,"Error while allocating target\n");
         exit(1);
     }
 
-    printf("%s\n", "MADE IT");
-    t->name = name;
-    t->dependencies = dependencies;
-    t->num_dependencies = num_depends;
-    t->command_lines = commands;
-    t->num_command_lines = num_commands;
+    target_list[num_targets]->name = name;
+    printf("THIS IS THE NAME OF THE TARGET WERE CREATING %s\n", name);
+    target_list[num_targets]->dependencies = dependencies;
+    target_list[num_targets]->num_dependencies = num_depends;
+    target_list[num_targets]->command_lines = commands;
+    target_list[num_targets]->num_command_lines = num_commands;
 
     // set visited to false (0)
-    t->visited = 0;
+    target_list[num_targets]->visited = 0;
     // set initial mod time to zero
-    t->modTime = 0; 
+    target_list[num_targets]->modTime = 0; 
 
-    return t;
 }
 
 void update() {
