@@ -168,7 +168,7 @@ void parse_makefile(FILE* makefile, int *num_targets, Target **target_list) {
 	    }
 
 	    printf("num commands: %d\n", num_commands);
- 	    for (int i=0; i<4; i++) {
+ 	    for (int i=0; i<num_commands; i++) {
 		printf("comm%d: %s\n", i, c[i]);
 	    }       
 
