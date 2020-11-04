@@ -12,12 +12,17 @@
 * 
 * ERROR IF THERE IS A CYCLE
 */
-void buildGraph(Target *target_list) {
+int buildGraph(Target **target_list, int num_targets) {
 
-    int stackSize = 4096;  // CHANGE THIS...to num of targets?
-    char stack[stackSize];
+    int total = 0;
+    int stackSize = num_targets;  // CHANGE THIS...to num of targets?
+    Target *stack[stackSize];
     int stackTop = -1;  // negative index means empty
-
+    for (int i=0; i<num_targets; i++) {
+	Target *toCheck = target_list[i];
+	total = total + traverseGraph(toCheck, target_list, num_targets);
+    }
+    return total;
 }
 
 void push(char stack[], int *stackTop, int stackSize, Target *target){
@@ -54,10 +59,10 @@ void pop(char stack[], int *stackTop, int stackSize){
 * -call recursively on each node in array of dependencies
 * -return true if dependency, otherwise false
 */
-bool traverseGraph(Target *t) {
+int traverseGraph(Target *t, Target **target_list, int *num_targets) {
 
     // BASE CASE: node has no dependencies
-    if (t->dependencies==NULL) {
+    if (t->num_dependencies==0) {
 	t->visited=0; // set visited equal to zero
 	return false;
     }
@@ -66,15 +71,18 @@ bool traverseGraph(Target *t) {
     // visit current node (root)
     t->visited=1;
     for (int i=0; i<t->num_dependencies; i++) {
-	//Target *curr = getTarget(t->dependencies[i]); 
+	Target *curr = findTarget(t->dependencies[i], target_list, num_targets); 
         // check if child is already visited and return true if yes
-        //if (curr->visited==1) return true;
-	//traverseGraph(curr);
+        if (curr->visited==1) return true;
+	traverseGraph(curr);
     }
 }
 
-Target *findTarget(char *name, Target *target_list, int *num_targets) {
+Target *findTarget(char *name, Target **target_list, int *num_targets) {
 
-       
+    for (int i=0; i<num_targets; i++) {
+        Target *curr = target_list[i];
+        if (strcmp(target_list[i]->name, name)==0) return curr;
+    }       
 
 }

@@ -32,7 +32,8 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    printf("AYYYE\n");
+    printf("------------TARGETS in main (%d total)----------\n", num_targets);
+    printf("\n");
     for (int i = 0; i<num_targets; i++) {
         //printf("i %d\n", i);
         Target *curr = target_list[i];
@@ -40,19 +41,33 @@ int main(int argc, char *argv[]) {
 	    //printf("num dependencies: %d\n", curr->num_dependencies); 
         for (int i=0; i<curr->num_dependencies; i++) {
 	    //printf("dep %d: %s\n", i, curr->dependencies[i]);
-	}
+	    }
         printf(" \n");
         //printf("num commands: %d\n", curr->num_command_lines);
         for (int i=0; i<curr->num_command_lines; i++) {
              //printf("comm %d: %s\n", i, curr->command_lines[i]);
         }
+	    printf("\n");
     }
 
-    // iterate through array of target structures
-    for (int i = 0; i<num_targets; i++) {
-        // check for cycles in each structure
-	traverseGraph(target_list[i]);
+    // count file dependencies
+    int file_count = count_files(target_list, &num_targets);
+    
+    // create array of file structs
+    struct File *file_list[file_count]; // text parser will return an array of targets
+    for (int i=0; i<file_count; i++) {
+        file_list[i] = (struct File*) malloc(sizeof(struct File));
+        if (NULL==file_list[i]) {
+            fprintf(stderr,"Error while allocating file in array\n");
+            exit(1);
+        }
     }
+        
+    // update array of file structs to have one file struct for each file
+    int num_unique_files = createFileStructs(file_list, &file_count, target_list, &num_targets);
+
+    // iterate through array of target structure
+    traverseGraph(target_list[i], target_list, &num_targets);
 
     // run process creation to run commands
     for (int i = 0; i < num_targets; i++) {
